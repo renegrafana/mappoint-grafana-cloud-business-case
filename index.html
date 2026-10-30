@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #FAFBFC; color: #1a1a2e; line-height: 1.75; }
+
+  .hero { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FFB347 100%); padding: 72px 40px 88px; text-align: center; color: #fff; position: relative; }
+  .hero::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 60px; background: #FAFBFC; clip-path: ellipse(55% 100% at 50% 100%); }
+  .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; }
+  .hero p { font-size: 1.15rem; font-weight: 300; max-width: 680px; margin: 0 auto; opacity: 0.95; }
+  .hero .tag { display: inline-block; background: rgba(255,255,255,0.2); padding: 6px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 18px; }
+
+  .container { max-width: 980px; margin: 0 auto; padding: 0 32px; }
+  .section { padding: 56px 0; }
+  .section + .section { border-top: 1px solid #eee; }
+  .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2.5px; color: #F7931E; margin-bottom: 6px; }
+  .section h2 { font-size: 1.85rem; font-weight: 700; color: #1a1a2e; margin-bottom: 14px; letter-spacing: -0.5px; }
+  .section h3 { font-size: 1.2rem; font-weight: 600; color: #1a1a2e; margin: 28px 0 10px; }
+  p.lead { font-size: 1.05rem; color: #555; max-width: 740px; margin-bottom: 28px; }
+  p.body-text { font-size: 0.95rem; color: #444; margin-bottom: 16px; line-height: 1.8; }
+
+  /* Stat row */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 40px 0; }
+  .stat-card { background: #fff; border-radius: 14px; padding: 28px 20px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #eee; }
+  .stat-number { font-size: 2.4rem; font-weight: 800; color: #F7931E; line-height: 1.1; }
+  .stat-label { font-size: 0.85rem; color: #555; margin-top: 6px; }
+  .stat-source { font-size: 0.68rem; color: #aaa; margin-top: 8px; font-style: italic; }
+
+  /* Tables */
+  .compare-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin: 24px 0 32px; font-size: 0.9rem; }
+  .compare-table thead th { padding: 16px 18px; text-align: left; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #f0f0f0; }
+  .compare-table thead th:first-child { color: #888; background: #FAFBFC; width: 26%; }
+  .compare-table thead th:nth-child(2) { color: #888; background: #FAFBFC; }
+  .compare-table thead th:nth-child(3) { color: #fff; background: #F7931E; }
+  .compare-table thead th:nth-child(4) { color: #fff; background: #F7931E; }
+  .compare-table td { padding: 14px 18px; border-bottom: 1px solid #f5f5f5; vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td:first-child { font-weight: 600; color: #333; }
+  .compare-table td:nth-child(2) { color: #888; }
+  .compare-table td:nth-child(3) { color: #1a1a2e; background: #FFF8F0; }
+  .compare-table td:nth-child(4) { color: #1a1a2e; background: #FFF8F0; }
+  .check { color: #22c55e; font-weight: 700; }
+  .cross { color: #ccc; }
+  .partial { color: #e6a817; font-weight: 600; }
+
+  /* AI feature cards */
+  .ai-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 24px 0 32px; }
+  .ai-card { background: #fff; border-radius: 14px; padding: 28px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #eee; border-left: 4px solid #F7931E; }
+  .ai-card h4 { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+  .ai-card .status { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 2px 10px; border-radius: 10px; margin-bottom: 10px; }
+  .ai-card .status.ga { background: #DCFCE7; color: #166534; }
+  .ai-card .status.preview { background: #FEF3C7; color: #92400E; }
+  .ai-card p { font-size: 0.88rem; color: #555; line-height: 1.7; }
+  .ai-card .outcome { font-size: 0.85rem; color: #F7931E; font-weight: 600; margin-top: 10px; }
+
+  /* TCO table */
+  .tco-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin: 24px 0; font-size: 0.9rem; }
+  .tco-table th { padding: 14px 18px; text-align: left; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #f0f0f0; background: #FAFBFC; color: #888; }
+  .tco-table td { padding: 14px 18px; border-bottom: 1px solid #f5f5f5; }
+  .tco-table tr:last-child td { border-bottom: none; }
+  .tco-table td:first-child { font-weight: 600; color: #333; }
+  .tco-table td:last-child { color: #888; font-size: 0.82rem; }
+
+  /* Customer reference cards */
+  .ref-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 20px; margin: 24px 0; }
+  .ref-card { background: #fff; border-radius: 14px; padding: 28px 32px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #eee; }
+  .ref-card .ref-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .ref-card .ref-name { font-size: 1.1rem; font-weight: 700; color: #1a1a2e; }
+  .ref-card .ref-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ref-card .ref-tag { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 10px; background: #FFF3E0; color: #E65100; }
+  .ref-card .ref-challenge { font-size: 0.88rem; color: #888; margin-bottom: 8px; }
+  .ref-card .ref-results { font-size: 0.9rem; color: #333; margin-bottom: 12px; }
+  .ref-card .ref-results strong { color: #F7931E; }
+  .ref-card blockquote { font-size: 0.95rem; font-style: italic; color: #555; border-left: 3px solid #F7931E; padding-left: 16px; margin: 12px 0 6px; }
+  .ref-card .ref-attribution { font-size: 0.8rem; color: #999; }
+
+  /* Quote block */
+  .quote-block { background: linear-gradient(135deg, #FFF5EB, #FFF0E0); border-left: 4px solid #F7931E; border-radius: 0 14px 14px 0; padding: 28px 36px; margin: 36px 0; }
+  .quote-block blockquote { font-size: 1.1rem; font-style: italic; color: #333; line-height: 1.8; }
+  .quote-block .attribution { font-size: 0.82rem; color: #888; margin-top: 10px; font-style: normal; }
+
+  /* Value cards */
+  .value-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 24px 0; }
+  .value-card { background: #fff; border-radius: 14px; padding: 28px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #eee; border-top: 4px solid #F7931E; }
+  .value-card h3 { font-size: 1.05rem; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+  .value-card p { font-size: 0.88rem; color: #555; line-height: 1.7; }
+
+  /* CTA */
+  .cta-section { background: linear-gradient(135deg, #1a1a2e, #2d2d4e); padding: 56px 40px; text-align: center; color: #fff; border-radius: 20px; margin: 48px auto; max-width: 980px; }
+  .cta-section h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 14px; color: #fff; }
+  .cta-section p { font-size: 1rem; opacity: 0.8; max-width: 560px; margin: 0 auto 28px; }
+  .cta-btn { display: inline-block; background: #F7931E; color: #fff; font-size: 0.95rem; font-weight: 600; padding: 14px 36px; border-radius: 50px; text-decoration: none; }
+
+  .footer { text-align: center; padding: 28px; font-size: 0.72rem; color: #bbb; border-top: 1px solid #eee; }
+
+  ul.detail-list { margin: 12px 0 20px 20px; }
+  ul.detail-list li { font-size: 0.9rem; color: #444; margin-bottom: 6px; line-height: 1.7; }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 1.8rem; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    .ai-grid, .value-grid { grid-template-columns: 1fr; }
+    .compare-table { font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="tag">Executive Briefing</div>
+  <h1>The Business Case for Grafana Cloud</h1>
+  <p>A detailed comparison of self-managed open source, hybrid, and fully managed Grafana Cloud — and why the managed path delivers better economics, lower risk, and faster outcomes.</p>
+</div>
+
+<!-- HEADLINE NUMBERS -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">At a Glance</div>
+    <h2>The numbers that frame the decision</h2>
+    <p class="lead">These benchmarks are drawn from the 50 largest OSS-to-Cloud migrations over a trailing 12-month period. They represent real outcomes, not projections.</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-number">2.1×</div>
+        <div class="stat-label">TCO of self-managed OSS vs. Grafana Cloud</div>
+        <div class="stat-source">Benchmark Library §2A (T3)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">2.4</div>
+        <div class="stat-label">FTEs on average maintaining an OSS stack</div>
+        <div class="stat-source">Benchmark Library §2B (T3)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">~40%</div>
+        <div class="stat-label">Median infrastructure over-provisioning on OSS</div>
+        <div class="stat-source">Benchmark Library §2A (T3)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">99.5%</div>
+        <div class="stat-label">Contractual uptime SLA on Grafana Cloud</div>
+        <div class="stat-source">Grafana Cloud SLA</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THE PROBLEM -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">The Problem</div>
+    <h2>Open source isn't free — it's differently expensive</h2>
+
+    <p class="body-text">Running Grafana, Prometheus, Loki, and Tempo in-house requires your team to provision infrastructure, manage upgrades and security patches, handle scaling, maintain high availability, and troubleshoot the observability stack itself — before they can use it to troubleshoot anything else.</p>
+
+    <p class="body-text">When you factor in <strong>infrastructure costs</strong> (compute, storage, networking), <strong>engineering costs</strong> (the 2.4 FTEs maintaining the stack), and <strong>opportunity costs</strong> (what those engineers would otherwise build), self-managed OSS costs roughly <strong>2.1× more</strong> than a managed service. Most organisations significantly underestimate this because infrastructure costs are spread across cloud bills and engineering costs are absorbed into team budgets rather than tracked as an observability line item.</p>
+
+    <p class="body-text">A hybrid model — running some components on-premise and some in the cloud — reduces but doesn't eliminate this burden. You still carry the operational complexity of managing the on-premise components, coordinating versions between environments, and maintaining two sets of access controls and compliance configurations.</p>
+
+    <h3>Five hidden costs of self-managed observability</h3>
+    <ul class="detail-list">
+      <li><strong>Infrastructure sprawl:</strong> Self-managed stacks are over-provisioned by ~40% on average because teams size for peak rather than actual usage, and lack the tooling to right-size automatically.</li>
+      <li><strong>Engineering drain:</strong> Upgrades, security patches, scaling, and troubleshooting consume 2.4 FTEs on average — capacity that could be building customer-facing features.</li>
+      <li><strong>Compliance burden:</strong> OSS Grafana has no native SSO, SAML, LDAP, or fine-grained RBAC. Meeting SOC 2, HIPAA, or regulatory requirements requires custom configuration work, recurring audit effort, and ongoing maintenance.</li>
+      <li><strong>Downtime exposure:</strong> A self-managed monitoring stack has no SLA. The median revenue impact of unplanned downtime is $9,200 per minute (all-industry). When the observability stack itself fails during an incident, resolution takes an additional 47 minutes on average.</li>
+      <li><strong>Feature ceiling:</strong> OSS does not include AI-powered investigation, SLO management, Adaptive Telemetry, incident response workflows, Knowledge Graph, or enterprise data source integrations. Each of these either requires a separate paid tool or goes unsolved.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- DETAILED CAPABILITY COMPARISON -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">Capability Comparison</div>
+    <h2>Self-managed OSS / Hybrid vs. Grafana Cloud — detailed breakdown</h2>
+    <p class="lead">Same Grafana your teams already know. Every capability below that's marked unavailable in OSS either requires building it yourself, buying a separate tool, or going without.</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Self-Managed / Hybrid</th>
+          <th>Grafana Cloud</th>
+          <th>Business Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Infrastructure &amp; scaling</td>
+          <td>You provision, patch, scale, and troubleshoot servers. ~40% over-provisioning is typical.</td>
+          <td><span class="check">✓</span> Fully managed. Auto-scales. No servers to operate.</td>
+          <td>Eliminate infrastructure cost and engineering hours spent on undifferentiated work.</td>
+        </tr>
+        <tr>
+          <td>Upgrades &amp; security patches</td>
+          <td>Manual. Often delayed weeks or months, creating security exposure.</td>
+          <td><span class="check">✓</span> Automatic. Always on the latest version with security patches applied.</td>
+          <td>Reduce compliance risk. Always audit-ready.</td>
+        </tr>
+        <tr>
+          <td>Uptime SLA</td>
+          <td><span class="cross">✗</span> No contractual SLA. Best-effort only.</td>
+          <td><span class="check">✓</span> 99.5% contractual SLA (higher available on request).</td>
+          <td>Your monitoring is up when you need it most — during production incidents.</td>
+        </tr>
+        <tr>
+          <td>Authentication &amp; access control</td>
+          <td><span class="cross">✗</span> No SSO, SAML, LDAP, or fine-grained RBAC in OSS.</td>
+          <td><span class="check">✓</span> SSO, SAML, LDAP, Okta OIDC, and fine-grained RBAC built in.</td>
+          <td>Enterprise-grade security without custom configuration or separate licensing.</td>
+        </tr>
+        <tr>
+          <td>Private network connectivity</td>
+          <td><span class="partial">◐</span> Requires VPN or custom tunnelling.</td>
+          <td><span class="check">✓</span> Private Data Source Connect (PDC) — secure SOCKS-over-SSH connection, no VPN changes.</td>
+          <td>Connect cloud observability to on-premise data sources without network redesign.</td>
+        </tr>
+        <tr>
+          <td>Unified metrics, logs, traces, profiles</td>
+          <td><span class="partial">◐</span> Assembled manually. Each backend (Mimir, Loki, Tempo, Pyroscope) managed separately.</td>
+          <td><span class="check">✓</span> Natively correlated LGTM stack. Jump from metric → log → trace → profile in one click via Knowledge Graph.</td>
+          <td>Faster root cause analysis. Fewer tools to switch between during incidents.</td>
+        </tr>
+        <tr>
+          <td>100+ infrastructure integrations</td>
+          <td><span class="cross">✗</span> Build, assemble, and maintain each exporter, dashboard, and alert rule yourself.</td>
+          <td><span class="check">✓</span> Turnkey integrations with curated dashboards and alerts — AWS, K8s, databases, and more.</td>
+          <td>Day-one observability for new services. No assembly required.</td>
+        </tr>
+        <tr>
+          <td>Enterprise data source plugins</td>
+          <td><span class="cross">✗</span> Not available in OSS (Datadog, Splunk, New Relic, SAP, Oracle, ServiceNow, MongoDB).</td>
+          <td><span class="check">✓</span> 20+ enterprise plugins included. Visualise data from commercial tools alongside LGTM telemetry.</td>
+          <td>Single pane of glass across your entire toolchain — not just the OSS components.</td>
+        </tr>
+        <tr>
+          <td>Grafana Assistant (AI)</td>
+          <td><span class="cross">✗</span> Not available.</td>
+          <td><span class="check">✓</span> Natural-language queries, dashboard creation, system explanation, incident investigation. Details below.</td>
+          <td>Accelerate onboarding, reduce reliance on senior engineers for routine queries.</td>
+        </tr>
+        <tr>
+          <td>Assistant Investigations</td>
+          <td><span class="cross">✗</span> Not available.</td>
+          <td><span class="check">✓</span> AI-powered parallel analysis of metrics, logs, traces, and profiles during incidents. Proposes candidate root causes. Details below.</td>
+          <td>Move from a blank page to a diagnostic hypothesis in minutes, not hours.</td>
+        </tr>
+        <tr>
+          <td>Adaptive Telemetry</td>
+          <td><span class="cross">✗</span> No automated cost control. Cardinality and log volume grow unchecked.</td>
+          <td><span class="check">✓</span> Adaptive Metrics, Adaptive Logs, Adaptive Traces, and Adaptive Profiles (all GA). Continuously identifies and trims unused telemetry. Details below.</td>
+          <td>Control observability costs without sacrificing signal quality during incidents.</td>
+        </tr>
+        <tr>
+          <td>Knowledge Graph</td>
+          <td><span class="cross">✗</span> Not available. Service relationships are manually maintained in wikis or CMDBs.</td>
+          <td><span class="check">✓</span> Automatically maps service relationships, dependencies, and infrastructure. Retains operational context across incidents.</td>
+          <td>Every investigation starts with context — what connects to what, what changed, what happened last time.</td>
+        </tr>
+        <tr>
+          <td>SLO management</td>
+          <td><span class="cross">✗</span> Not available. Requires a separate tool or custom implementation.</td>
+          <td><span class="check">✓</span> Define, monitor, and alert on SLOs natively. Error budget tracking built in.</td>
+          <td>Manage reliability targets without building custom tooling.</td>
+        </tr>
+        <tr>
+          <td>Incident Response &amp; Management</td>
+          <td><span class="cross">✗</span> Requires separate tools (PagerDuty, etc.).</td>
+          <td><span class="check">✓</span> Grafana IRM + OnCall — integrated incident workflows, on-call rotation, escalation.</td>
+          <td>One platform for detection, investigation, and response. No context-switching.</td>
+        </tr>
+        <tr>
+          <td>Support</td>
+          <td>Community forums. No guaranteed response times.</td>
+          <td><span class="check">✓</span> Dedicated support from the team that built the product. 24/7 available on enterprise plans.</td>
+          <td>Expert help when it matters, not a forum post that may or may not get answered.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- AI & AUTOMATION DEEP DIVE -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">Automation &amp; AI</div>
+    <h2>Capabilities that only exist in Grafana Cloud</h2>
+    <p class="lead">These are not incremental improvements over OSS — they are entirely new capabilities with no self-managed equivalent. Each one automates work that currently requires senior engineering time or goes undone.</p>
+
+    <div class="ai-grid">
+      <div class="ai-card">
+        <span class="status ga">GA</span>
+        <h4>Grafana Assistant</h4>
+        <p>A conversational AI built into the Grafana interface. Engineers query any connected data source in natural language — no need to know PromQL, LogQL, or TraceQL syntax. It creates and modifies dashboards, explains system behaviour, answers how-to questions, and onboards new team members by walking them through the environment. Integrates with Slack, GitHub, Jira, Linear, and 50+ tools via MCP.</p>
+        <div class="outcome">→ Faster onboarding. Self-service for non-expert users. Reduced reliance on senior engineers for routine queries.</div>
+      </div>
+
+      <div class="ai-card">
+        <span class="status ga">GA</span>
+        <h4>Assistant Investigations</h4>
+        <p>When an incident occurs, Assistant Investigations runs parallel AI analysis across metrics, logs, traces, and profiles — correlating the alert against recent deployments and incident history to propose candidate root causes. In production testing, it reached root cause <strong>3.5× faster</strong> than manual on-call investigation (8 minutes vs. 28 minutes). It also identifies unbounded queries, misconfigured services, and resource exhaustion automatically.</p>
+        <div class="outcome">→ Engineers open an investigation holding a hypothesis, not a blank dashboard. Dramatically reduces mean time to resolution (MTTR).</div>
+      </div>
+
+      <div class="ai-card">
+        <span class="status ga">GA</span>
+        <h4>Adaptive Telemetry</h4>
+        <p>Four components — Adaptive Metrics, Adaptive Logs, Adaptive Traces, and Adaptive Profiles — that continuously analyse your actual usage patterns and recommend telemetry to aggregate, drop, or sample. Keeps the signals you actually query and alert on. Trims the ones you don't. In practice: Uni Cards reduced metrics from 4 million to 700,000 series, eliminating ~$12,000/month in cost. Lovable cut metrics volume by 93%.</p>
+        <div class="outcome">→ Control observability costs automatically without sacrificing the signals that matter during incidents. No manual cardinality cleanup.</div>
+      </div>
+
+      <div class="ai-card">
+        <span class="status ga">GA</span>
+        <h4>Knowledge Graph</h4>
+        <p>Two components: <strong>Knowledge Graph Entities</strong> automatically maps relationships between services, dependencies, and infrastructure as your environment changes. <strong>Knowledge Graph Memories</strong> retains operational context from past incidents and decisions so investigations don't start from scratch. Together they provide the "connective tissue" between telemetry signals — not just what's happening, but where it originated, what changed, and what downstream systems are affected.</p>
+        <div class="outcome">→ Every agent and engineer starts from a live map of your systems. No manual service catalog maintenance. Context persists across incidents.</div>
+      </div>
+
+      <div class="ai-card">
+        <span class="status ga">GA</span>
+        <h4>Alert Enrichment</h4>
+        <p>Automatically adds context to a firing alert <em>before</em> anyone looks at it — service relationships from Knowledge Graph, recent deployment history, and correlated anomalies. This means both Assistant Investigations and your on-call engineer start from a brief rather than a raw signal.</p>
+        <div class="outcome">→ The alert itself becomes actionable intelligence, not just a notification that something is wrong.</div>
+      </div>
+
+      <div class="ai-card">
+        <span class="status preview">Public Preview</span>
+        <h4>Assistant Watchers</h4>
+        <p>User-configured, periodic assessments of operational concerns. Watchers detect, assess, and can escalate issues <em>before</em> they trigger an alert — moving detection from reactive to proactive without anyone watching a dashboard around the clock.</p>
+        <div class="outcome">→ Shift the metric from MTTR (how fast you respond) to interception rate (how many problems you catch before a user notices).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TCO CASE -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">Financial Case</div>
+    <h2>Total Cost of Ownership — the full picture</h2>
+    <p class="lead">The contract line is visible. The hidden costs of self-management are not. Here is what the benchmark data shows across 50 migrations.</p>
+
+    <table class="tco-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OSS full TCO vs. managed cloud</td>
+          <td><strong>~2.1×</strong></td>
+          <td>Benchmark Library §2A, T3</td>
+        </tr>
+        <tr>
+          <td>Average FTEs dedicated to OSS stack</td>
+          <td><strong>2.4 FTEs</strong></td>
+          <td>Benchmark Library §2B, T3</td>
+        </tr>
+        <tr>
+          <td>Median engineering capacity recovered post-migration</td>
+          <td><strong>$360K/yr</strong> (range $150K–$750K)</td>
+          <td>Benchmark Library §2B, T3</td>
+        </tr>
+        <tr>
+          <td>Average infrastructure over-provisioning on OSS</td>
+          <td><strong>40%</strong></td>
+          <td>Benchmark Library §2A, T3</td>
+        </tr>
+        <tr>
+          <td>Median annual infrastructure savings post-migration</td>
+          <td><strong>$200K/yr</strong> (range $80K–$1.2M)</td>
+          <td>Benchmark Library §2A, T3</td>
+        </tr>
+        <tr>
+          <td>Median revenue impact of unplanned downtime</td>
+          <td><strong>$9,200/min</strong></td>
+          <td>Benchmark Library §2D, T3</td>
+        </tr>
+        <tr>
+          <td>Additional MTTR when observability stack fails during incident</td>
+          <td><strong>+47 minutes</strong></td>
+          <td>Benchmark Library §2D, T3</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="body-text">The strongest anchor for this decision is the forward run rate, not the sunk cost. The question is not "how much have we already spent building it" — it is "what does it cost us next year, and the year after that, to keep running it?" On a three-year horizon, build costs compound (more data, more services, more compliance requirements) while the sunk cost does not recur.</p>
+  </div>
+</div>
+
+<!-- CUSTOMER REFERENCES -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">Customer Evidence</div>
+    <h2>Organisations that made this move — and what happened</h2>
+    <p class="lead">These are public, verified references from organisations that migrated from self-managed OSS or hybrid to Grafana Cloud.</p>
+
+    <div class="ref-grid">
+
+      <div class="ref-card">
+        <div class="ref-header">
+          <span class="ref-name">ASOS</span>
+          <div class="ref-tags"><span class="ref-tag">Retail</span><span class="ref-tag">OSS → Cloud</span><span class="ref-tag">800 Engineers</span></div>
+        </div>
+        <div class="ref-challenge">Ran Grafana OSS across multiple geographic regions with a large-scale self-managed Graphite instance. As adoption grew, the overhead of maintaining the stack — especially the time series data store — became unsustainable.</div>
+        <div class="ref-results">Results: <strong>30% cost reduction</strong>, <strong>50% MTTR reduction</strong>, <strong>2.6 million series trimmed</strong>. ~800 engineers now use Grafana Cloud dashboards daily.</div>
+        <blockquote>"[Grafana Cloud] meant that we could focus on the observability — getting the best out of the platform — without running it."</blockquote>
+        <div class="ref-attribution">— Dylan Morley, Lead Principal Engineer, ASOS</div>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-header">
+          <span class="ref-name">Uni Cards</span>
+          <div class="ref-tags"><span class="ref-tag">Fintech</span><span class="ref-tag">OSS → Cloud</span><span class="ref-tag">Adaptive Metrics</span></div>
+        </div>
+        <div class="ref-challenge">Ran Grafana OSS for two years after migrating from ELK. As the team downsized, maintaining OSS (upgrades, scaling, security patches, compliance) became unsustainable for a lean engineering team in a regulated fintech environment.</div>
+        <div class="ref-results">Results: Adaptive Metrics reduced active metrics from <strong>4 million to ~700,000 series</strong>, eliminating <strong>~$12,000/month</strong> in excess cost. Engineers freed from infrastructure maintenance, compliance, and scaling work.</div>
+        <blockquote>"When we factored in not just the software costs but also the cost of the people managing the system, Grafana Cloud was the clear choice."</blockquote>
+        <div class="ref-attribution">— Rahul Golani, Principal Engineer, Uni Cards</div>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-header">
+          <span class="ref-name">Optro (formerly AuditBoard)</span>
+          <div class="ref-tags"><span class="ref-tag">SaaS / GRC</span><span class="ref-tag">Vendor → Cloud</span><span class="ref-tag">Cost Control</span></div>
+        </div>
+        <div class="ref-challenge">Previously relied on a proprietary vendor for metrics and tracing. Costs were spiralling — monitoring basic Kubernetes metrics like persistent volume claims cost thousands of dollars per query. Engineers wanted visibility and experimentation, but the pricing model punished both.</div>
+        <div class="ref-results">Results: Active series <strong>cut from 20 million to 9 million</strong> using Adaptive Metrics. Engineers can now experiment freely without cost anxiety.</div>
+        <blockquote>"I'm just trying to figure out if we need a PVC or not. And it's like, 'Well, that cost me three grand.'"</blockquote>
+        <div class="ref-attribution">— Puneet Kandhari, Engineering Manager, Optro</div>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-header">
+          <span class="ref-name">Swiss Post</span>
+          <div class="ref-tags"><span class="ref-tag">Logistics / Government</span><span class="ref-tag">Enterprise → Cloud</span><span class="ref-tag">Scale</span></div>
+        </div>
+        <div class="ref-challenge">Managed an internal Grafana Enterprise deployment. As the organisation scaled, maintaining the self-managed observability platform became increasingly complex. The team needed tracing, machine learning, and improved alerting capabilities that were impractical to build and maintain in-house.</div>
+        <div class="ref-results">Results: Unified multiple observability tools into a single Grafana Cloud stack. Integrated metrics, logs, and traces. Automated alerting and notification policies at scale.</div>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-header">
+          <span class="ref-name">Alter Domus</span>
+          <div class="ref-tags"><span class="ref-tag">Financial Services</span><span class="ref-tag">AI / Agent Observability</span></div>
+        </div>
+        <div class="ref-challenge">Deploying AI agents that connected to MCP servers. The agents were looping — making repeated calls without resolving issues — and the team had no way to see why.</div>
+        <div class="ref-results">Results: <strong>50% reduction in monthly observability run rate</strong> even as AI adoption grew. MTTR reduced from hours to minutes. <strong>2,000+ resources</strong> monitored across infrastructure, applications, and AI agents in a single platform.</div>
+        <blockquote>"The agents were looping instead of going straight to the answer. Thanks to Grafana AI Observability, we were able to improve the skills and the prompts and fix it directly."</blockquote>
+        <div class="ref-attribution">— Philippe Pencal, Head of SRE, Alter Domus</div>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-header">
+          <span class="ref-name">Erste Digital (Erste Group)</span>
+          <div class="ref-tags"><span class="ref-tag">Banking / Finance</span><span class="ref-tag">250+ OSS instances → Cloud</span><span class="ref-tag">Regulated</span></div>
+        </div>
+        <div class="ref-challenge">Operating in a highly regulated banking environment with 250+ Grafana OSS instances backed by many different data sources. Hundreds of teams in silos. Incident response was slow, visibility was limited, and the organisation wanted to avoid vendor lock-in while meeting strict compliance requirements.</div>
+        <div class="ref-results">Results: Adopted Grafana Cloud as a vendor-neutral, OpenTelemetry-based platform. Unified fragmented observability across a vast legacy-heavy IT landscape while maintaining regulatory compliance.</div>
+      </div>
+
+    </div>
+
+    <p class="body-text" style="color: #888; font-size: 0.85rem; margin-top: 16px;">Additional verified migration results: <strong>Iron Mountain</strong> — $640K+ annual savings, 43% TCO reduction, 2+ FTEs reallocated, 40% MTTR reduction. <strong>Rad.ai</strong> — ~70% hard-cost reduction ($1M self-managed → ~$300K Cloud). <strong>Mux</strong> — metrics volume −60%, hundreds of engineering hours/year saved, retention expanded 14 days → 13 months. <strong>SailPoint</strong> — active series cut 50% (75M → 37.5M); Cloud judged cheaper than OSS once infrastructure and engineering time were included.</p>
+  </div>
+</div>
+
+<!-- WHAT MIGRATION LOOKS LIKE -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">Migration Path</div>
+    <h2>What the migration actually involves</h2>
+    <p class="lead">Migration to Grafana Cloud is a configuration change, not a rewrite. Your applications and instrumentation stay the same.</p>
+
+    <table class="tco-table">
+      <thead>
+        <tr><th>Step</th><th>What Happens</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Repoint collectors</td><td>Send Alloy, Prometheus remote-write, and OTLP traffic to Grafana Cloud endpoints. This is a collector configuration change over standard protocols — no application changes.</td></tr>
+        <tr><td>2. Connect private data sources</td><td>Private sources connect through Private Data Source Connect (PDC) via SOCKS over SSH. No VPN redesign required.</td></tr>
+        <tr><td>3. Import dashboards</td><td>Export dashboard JSON from OSS and import into Grafana Cloud. Remap data source UIDs as part of the import.</td></tr>
+        <tr><td>4. Validate in parallel</td><td>Run OSS and Cloud side by side during a 30-day proof-of-value. Confirm data parity. Experience the Cloud-only capabilities (integrations, AI, Knowledge Graph) before decommissioning anything.</td></tr>
+        <tr><td>5. Decommission &amp; scale</td><td>Shut down the self-managed infrastructure. Onboard new teams without adding operational overhead. Grafana Professional Services can run the migration end to end.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- BUSINESS OUTCOMES -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">Summary</div>
+    <h2>Four outcomes that justify the decision</h2>
+
+    <div class="value-grid">
+      <div class="value-card">
+        <h3>💰 Lower Total Cost of Ownership</h3>
+        <p>Self-managed OSS costs ~2.1× more when you include FTEs, infrastructure, and opportunity cost. Grafana Cloud converts variable, hidden costs into a single predictable line item. Median annual savings: $200K infrastructure + $360K engineering capacity recovered.</p>
+      </div>
+      <div class="value-card">
+        <h3>🛡️ Reduced Business Risk</h3>
+        <p>99.5% contractual SLA. Built-in SSO, SAML, LDAP, RBAC. Automatic security patches and compliance readiness. No risk of the monitoring stack itself failing during a production incident — which adds an average of 47 minutes to resolution time.</p>
+      </div>
+      <div class="value-card">
+        <h3>🚀 Engineering Productivity</h3>
+        <p>2.4 FTEs freed from maintenance. Engineers build product features instead of managing exporters, dashboards, and infrastructure. Adaptive Telemetry automates cost control that previously required quarterly manual cleanup exercises.</p>
+      </div>
+      <div class="value-card">
+        <h3>⚡ Accelerated Insights with AI</h3>
+        <p>Grafana Assistant and Investigations propose root causes 3.5× faster than manual investigation. Knowledge Graph provides persistent service context. Alert Enrichment adds context before anyone opens the alert. None of these capabilities exist in OSS.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOSING QUOTE -->
+<div class="container">
+  <div class="quote-block">
+    <blockquote>"We want to be at the leading edge of whatever is being developed, so we like knowing that there's a support team behind the scenes."</blockquote>
+    <div class="attribution">— Siemens Mobility, on choosing Grafana Cloud over self-managed</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="container">
+  <div class="cta-section">
+    <h2>Next step: Build the business case with your numbers</h2>
+    <p>We'll map your current stack costs — infrastructure, FTEs, and opportunity cost — against a Grafana Cloud deployment, so the decision is grounded in your data, not benchmarks alone.</p>
+    <a href="mailto:rene.wong@grafana.com" class="cta-btn">Schedule a TCO Workshop →</a>
+  </div>
+</div>
+
+<div class="footer">
+  Trusted by 10,000+ organisations including Anthropic, Bloomberg, NVIDIA, Microsoft, and Salesforce.<br>
+  Prepared by Grafana Labs &nbsp;|&nbsp; October 2026
+</div>
+
+</body>
+</html>
